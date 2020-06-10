@@ -88,10 +88,6 @@
             {
               "name": "CONTRAST__API__USER_NAME",
               "value": "agent_username_here"
-            },
-            {
-              "name": "hihi",
-              "value": "laurent!"
             }
           ]
         }
