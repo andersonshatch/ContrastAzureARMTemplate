@@ -8,7 +8,7 @@ Environment variables required by the extensions are also setup with this templa
 1. Set a value for `hostingPlanName` in `WebSite.parameters.json`
 1. (Optional) Adjust the value for `ResourceGroupName` in `Deploy-AzureResourceGroup.ps1` or pass it as a parameter
 1. Update the 4 environment variable values beginning with `CONTRAST__` in `WebSite.json` (start around line 75) with values from your Contrast account
-** Recommendation ** Use Azure Vault values instead
+**Recommendation** Use Azure Vault values instead
 
 ## Deploy
 1. Install the AzureRM module in PowerShell: `Install-Module AzureRM`
