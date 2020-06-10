@@ -17,3 +17,5 @@ Environment variables required by the extensions are also setup with this templa
 1. Determine which location to deploy the resources to. To see a list, run `Get-AzureRMLocation | Format-Table`
 1. Run the deployment script in PowerShell: `.\Deploy-AzureResourceGroup.ps1`
 1. Specify a region
+
+This will create the required resources. To complete integration, you must publish your .NET or .NET Core application to this app services instance, and your application should then show up in Contrast.
