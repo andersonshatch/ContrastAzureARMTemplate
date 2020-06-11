@@ -34,6 +34,18 @@
       "metadata": {
         "description": "Describes plan's instance count"
       }
+    },
+    "contrastApiKey": {
+      "type": "securestring"
+    },
+    "contrastAgentServiceKey": {
+      "type": "securestring"
+    },
+    "contrastAgentUsername": {
+      "type": "securestring"
+    },
+    "contrastURL": {
+      "type": "securestring"
     }
   },
   "variables": {
@@ -75,95 +87,101 @@
           "appSettings": [
             {
               "name": "CONTRAST__API__API_KEY",
-              "value": "agent_api_key_here"
+              "value": "[parameters('contrastApiKey')]"
             },
             {
               "name": "CONTRAST__API__SERVICE_KEY",
-              "value": "service_key_here"
+              "value": "[parameters('contrastAgentServiceKey')]"
             },
             {
               "name": "CONTRAST__API__URL",
-              "value": "contrast_url_here"
+              "value": "[parameters('contrastURL')]"
             },
             {
               "name": "CONTRAST__API__USER_NAME",
-              "value": "agent_username_here"
+              "value": "[parameters('contrastAgentUsername')]"
             }
           ]
         }
       }
     },
     {
-      "apiVersion": "2014-04-01",
-      "name": "[concat(parameters('hostingPlanName'), '-', resourceGroup().name)]",
-      "type": "Microsoft.Insights/autoscalesettings",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
-        "displayName": "AutoScaleSettings"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
-      ],
-      "properties": {
-        "profiles": [
-          {
-            "name": "Default",
-            "capacity": {
-              "minimum": 1,
-              "maximum": 2,
-              "default": 1
-            },
-            "rules": [
-              {
-                "metricTrigger": {
-                  "metricName": "CpuPercentage",
-                  "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-                  "timeGrain": "PT1M",
-                  "statistic": "Average",
-                  "timeWindow": "PT10M",
-                  "timeAggregation": "Average",
-                  "operator": "GreaterThan",
-                  "threshold": 80.0
-                },
-                "scaleAction": {
-                  "direction": "Increase",
-                  "type": "ChangeCount",
-                  "value": 1,
-                  "cooldown": "PT10M"
-                }
-              },
-              {
-                "metricTrigger": {
-                  "metricName": "CpuPercentage",
-                  "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-                  "timeGrain": "PT1M",
-                  "statistic": "Average",
-                  "timeWindow": "PT1H",
-                  "timeAggregation": "Average",
-                  "operator": "LessThan",
-                  "threshold": 60.0
-                },
-                "scaleAction": {
-                  "direction": "Decrease",
-                  "type": "ChangeCount",
-                  "value": 1,
-                  "cooldown": "PT1H"
-                }
-              }
-            ]
-          }
-        ],
-        "enabled": false,
+        "apiVersion": "2014-04-01",
         "name": "[concat(parameters('hostingPlanName'), '-', resourceGroup().name)]",
-        "targetResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+        "type": "Microsoft.Insights/autoscalesettings",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
+          "displayName": "AutoScaleSettings"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+        ],
+        "properties": {
+          "profiles": [
+            {
+              "name": "Default",
+              "capacity": {
+                "minimum": 1,
+                "maximum": 2,
+                "default": 1
+              },
+              "rules": [
+                {
+                  "metricTrigger": {
+                    "metricName": "CpuPercentage",
+                    "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT10M",
+                    "timeAggregation": "Average",
+                    "operator": "GreaterThan",
+                    "threshold": 80.0
+                  },
+                  "scaleAction": {
+                    "direction": "Increase",
+                    "type": "ChangeCount",
+                    "value": 1,
+                    "cooldown": "PT10M"
+                  }
+                },
+                {
+                  "metricTrigger": {
+                    "metricName": "CpuPercentage",
+                    "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                    "timeGrain": "PT1M",
+                    "statistic": "Average",
+                    "timeWindow": "PT1H",
+                    "timeAggregation": "Average",
+                    "operator": "LessThan",
+                    "threshold": 60.0
+                  },
+                  "scaleAction": {
+                    "direction": "Decrease",
+                    "type": "ChangeCount",
+                    "value": 1,
+                    "cooldown": "PT1H"
+                  }
+                }
+              ]
+            }
+          ],
+          "enabled": false,
+          "name": "[concat(parameters('hostingPlanName'), '-', resourceGroup().name)]",
+          "targetResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites/siteextensions",
+        "name": "[concat(variables('webSiteName'), '/', 'Contrast.NetCore.Azure.SiteExtension')]",
+        "apiVersion": "2019-08-01",
+        "location": "[resourceGroup().location]"
+      },
+      {
+        "type": "Microsoft.Web/sites/siteextensions",
+        "name": "[concat(variables('webSiteName'), '/', 'Contrast.Net.Azure.SiteExtension')]",
+        "apiVersion": "2019-08-01",
+        "location": "[resourceGroup().location]"
       }
-    },
-    {
-      "type": "Microsoft.Web/sites/siteextensions",
-      "name": "[concat(variables('webSiteName'), '/', 'Contrast.NetCore.Azure.SiteExtension')]",
-      "apiVersion": "2019-08-01",
-      "location": "[resourceGroup().location]"
-    }
   ]
 }
