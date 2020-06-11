@@ -1,15 +1,17 @@
 # Contrast Security + Azure App Services ARM template
 
-ARM template to create a resource group, app services instance, and add the Contrast .NET and .NET Core extensions to it.
+ARM template to create a resource group, app services instance, and add the Contrast .NET or .NET Core extension to it.
 
 Environment variables required by the extensions are also setup with this template.
 
 ## Setup
+1. Define 4 secrets in Azure Key Vault: `contrastApiKey`, `contrastAgentServiceKey`, `contrastAgentUsername` and `contrastURL` -- values for these can be found by logging in to Contrast and navigating to Organization Settings -> API
+(contrastURL should be scheme and host/port only, do not include `/Contrast`)
 1. Set a value for `hostingPlanName` in `WebSite.parameters.json`
 1. (Optional) Adjust the value for `ResourceGroupName` in `Deploy-AzureResourceGroup.ps1` or pass it as a parameter
-1. Update the 4 environment variable values beginning with `CONTRAST__` in `WebSite.json` (start around line 75) with values from your Contrast account
+1. Update the 4 key vault references in `WebSite.parameters.json`
 
-**Recommendation**: Use Azure Vault values instead of hardcoding these here.
+If you are not using Azure Key Vault, rename the minimal `WebSite.prompt-parameters.json` to `WebSite.parameters`, and then you will be prompted for the 4 values when running the deploy below.
 
 ## Deploy
 1. Install the AzureRM module in PowerShell: `Install-Module AzureRM`
@@ -17,5 +19,6 @@ Environment variables required by the extensions are also setup with this templa
 1. Determine which location to deploy the resources to. To see a list, run `Get-AzureRMLocation | Format-Table`
 1. Run the deployment script in PowerShell: `.\Deploy-AzureResourceGroup.ps1`
 1. Specify a region
+1. When prompted for `contrastDotnetOrDotnetCore`, enter `Dotnet` if your application is using the .NET Framework, and `DotnetCore` if your application is using .NET Core
 
 This will create the required resources. To complete integration, you must publish your .NET or .NET Core application to this app services instance, and your application should then show up in Contrast.

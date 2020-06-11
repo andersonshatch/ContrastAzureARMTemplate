@@ -1,9 +1,41 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "hostingPlanName": {
-      "value": ""
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "hostingPlanName": {
+        "value": ""
+      },
+      "contrastApiKey": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/<SubscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.KeyVault/vaults/<KeyVaultName>"
+          },
+          "secretName": "contrastApiKey"
+        }
+      },
+      "contrastAgentServiceKey": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/<SubscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.KeyVault/vaults/<KeyVaultName>"
+          },
+          "secretName": "contrastAgentServiceKey"
+        }
+      },
+      "contrastAgentUsername": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/<SubscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.KeyVault/vaults/<KeyVaultName>"
+          },
+          "secretName": "contrastAgentUsername"
+        }
+      },
+      "contrastURL": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/<SubscriptionID>/resourceGroups/<ResourceGroupName>/providers/Microsoft.KeyVault/vaults/<KeyVaultName>"
+          },
+          "secretName": "contrastURL"
+        }
+      }
     }
   }
-}
