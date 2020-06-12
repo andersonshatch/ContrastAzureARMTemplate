@@ -26,7 +26,7 @@ This will create the required resources. To complete integration, you must publi
 ## Deploy from Azure DevOps Pipeline
 1. Add the following task to your Pipeline YAML file:
 
-    ```
+    ```yaml
     - task: AzureResourceManagerTemplateDeployment@3
       inputs:
         deploymentScope: 'Resource Group'
