@@ -26,21 +26,21 @@ This will create the required resources. To complete integration, you must publi
 ## Deploy from Azure DevOps Pipeline
 1. Add the following task to your Pipeline YAML file:
 
-```
-- task: AzureResourceManagerTemplateDeployment@3
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: '<Name of Azure Service Connection>'
-    subscriptionId: '<Your Azure Subscription ID>'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: '<Your Resource Group Name>'
-    location: '<Azure Deployment Location>'
-    templateLocation: 'Linked artifact'
-    csmFile: '<Path/to/WebSite.json>'
-    csmParametersFile: '<Path/To/WebSite.parameters.json>'
-    deploymentMode: 'Incremental'
-    overrideParameters: '-contrastDotnetOrDotnetCore <Dotnet|DotnetCore>'
-```
+    ```
+    - task: AzureResourceManagerTemplateDeployment@3
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: '<Name of Azure Service Connection>'
+        subscriptionId: '<Your Azure Subscription ID>'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: '<Your Resource Group Name>'
+        location: '<Azure Deployment Location>'
+        templateLocation: 'Linked artifact'
+        csmFile: '<Path/to/WebSite.json>'
+        csmParametersFile: '<Path/To/WebSite.parameters.json>'
+        deploymentMode: 'Incremental'
+        overrideParameters: '-contrastDotnetOrDotnetCore <Dotnet|DotnetCore>'
+    ```
 1. Replace the following 7 parameters in the above snippet:
 
 ||Placeholder|Description
