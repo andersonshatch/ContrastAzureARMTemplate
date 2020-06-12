@@ -69,7 +69,7 @@ This will create the required resources. To complete integration, you must publi
 |7|`<Dotnet\|DotnetCore>`|Which Contrast agent extension to use: .NET Framework (`Dotnet`) or .NET Core (`DotnetCore`)|
 
 The following are optional, but **recommended** parameters which can be added to the `overrideParameters` section:
-||Placeholder|Description
+||Parameter Name|Value Description
 |---|---|---|
 |1|`-contrastServerEnvironment`|Environment value sent to Contrast when servers are created. Valid values are `DEVELOPMENT`, `QA` or `PRODUCTION`. Default: `QA`|
 |2|`-contrastApplicationGroup`|A comma separated list of application groups the application should associated to|
