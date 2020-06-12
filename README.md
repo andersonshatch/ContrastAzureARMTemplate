@@ -4,6 +4,21 @@ ARM template to create a resource group, app services instance, and add the Cont
 
 Environment variables required by the extensions are also setup with this template.
 
+## Components
+1. The ARM template itself: [`WebSite.json`](WebSite.json)
+1. The parameters to the template, using Azure Vault references: [`WebSite.parameters.json`](WebSite.parameters.json)
+1. Minimal parameters to the template, if you do not want to use Azure Vault: [`WebSite.prompt-parameters.json`](WebSite.prompt-parameters.json)
+1. A PowerShell script to deploy the template: [`Deploy-AzureResourceGroup.ps1`](Deploy-AzureResourceGroup.ps1)
+
+### Contrast specifics in the template
+As the provided ARM template generates many resources in addition to Contrast specifics, if you want to integrate the Contrast specific parts into an existing ARM template, the following links highlight key sections which you'll need to integrate:
+
+- [Declaration of Parameters](/WebSite.json#L38:L61)
+- [Parameter Reference to Vault Keys](/WebSite.parameters.json#L8:L39)
+- [Declaration of Template Variables](/WebSite.json#L65:L70)
+- [Setup of Contrast Environment Variables](/WebSite.json#L89:L125)
+- [Addition of Contrast Extension](/WebSite.json#L192:L200)
+
 ## Setup
 1. Define 4 secrets in Azure Key Vault: `contrastApiKey`, `contrastAgentServiceKey`, `contrastAgentUsername` and `contrastURL` -- values for these can be found by logging in to Contrast and navigating to Organization Settings -> API
 (contrastURL should be scheme and host/port only, do not include `/Contrast`)
