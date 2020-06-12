@@ -58,6 +58,26 @@
     },
     "contrastURL": {
       "type": "securestring"
+    },
+    "contrastServerEnvironment": {
+      "type": "string",
+      "allowedValues": [
+        "DEVELOPMENT",
+        "QA",
+        "PRODUCTION"
+      ],
+      "defaultValue": "QA"
+    },
+    "contrastApplicationGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Comma separated list of the application groups the application should associated to"
+      },
+      "defaultValue": ""
+    },
+    "contrastServerName": {
+      "type": "string",
+      "defaultValue": ""
     }
   },
   "variables": {
@@ -118,6 +138,18 @@
             {
               "name": "CONTRAST__API__USER_NAME",
               "value": "[parameters('contrastAgentUsername')]"
+            },
+            {
+              "name": "CONTRAST__SERVER__ENVIRONMENT",
+              "value": "[parameters('contrastServerEnvironment')]"
+            },
+            {
+              "name": "CONTRAST__APPLICATION__GROUP",
+              "value": "[parameters('contrastApplicationGroup')]"
+            },
+            {
+              "name": "CONTRAST__SERVER__NAME",
+              "value": "[parameters('contrastServerName')]"
             }
           ]
         }
