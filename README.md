@@ -17,7 +17,7 @@ As the provided ARM template generates many resources in addition to Contrast sp
 - [Parameter Reference to Vault Keys](/WebSite.parameters.json#L8:L39)
 - [Declaration of Template Variables](/WebSite.json#L85:L90)
 - [Setup of Contrast Environment Variables](/WebSite.json#L125:L153)
-- [Addition of Contrast Extension](/WebSite.json#L224:L232)
+- [Addition of Contrast Extension](/WebSite.json#L158:L166)
 
 ## Setup
 1. Define 4 secrets in Azure Key Vault: `contrastApiKey`, `contrastAgentServiceKey`, `contrastAgentUsername` and `contrastURL` -- values for these can be found by logging in to Contrast and navigating to Organization Settings -> API
