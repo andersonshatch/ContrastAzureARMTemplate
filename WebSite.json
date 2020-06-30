@@ -83,8 +83,8 @@
   "variables": {
     "webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
     "contrastExtensionPackage": {
-      "Dotnet": "Contrast.Net.Azure.SiteExtension",
-      ".NET Framework": "Contrast.Net.Azure.SiteExtension",
+      "Dotnet": "Contrast.NET.Azure.SiteExtension",
+      ".NET Framework": "Contrast.NET.Azure.SiteExtension",
       "DotnetCore":  "Contrast.NetCore.Azure.SiteExtension",
       ".NET Core": "Contrast.NetCore.Azure.SiteExtension"
     }
