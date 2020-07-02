@@ -39,9 +39,7 @@
       "type": "string",
       "allowedValues": [
         "Dotnet",
-        ".NET Framework",
-        "DotnetCore",
-        ".NET Core"
+        "DotnetCore"
       ],
       "metadata": {
         "description": "Select between the .NET Framework and the .NET Core Contrast Extension, based on which language the site deployed to this service will use."
@@ -82,11 +80,20 @@
   },
   "variables": {
     "webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
+    "insightsName":  "[concat('webSite', uniqueString(resourceGroup().id), 'Insights')]",
     "contrastExtensionPackage": {
-      "Dotnet": "Contrast.NET.Azure.SiteExtension",
-      ".NET Framework": "Contrast.NET.Azure.SiteExtension",
-      "DotnetCore":  "Contrast.NetCore.Azure.SiteExtension",
-      ".NET Core": "Contrast.NetCore.Azure.SiteExtension"
+      "Dotnet": {
+        "name": "Contrast.NET.Azure.SiteExtension",
+        "id": "{EFEB8EE0-6D39-4347-A5FE-4D0C88BC5BC1}",
+        "path32": "D:\\home\\SiteExtensions\\Contrast.NET.Azure.SiteExtension\\ContrastAppService\\ContrastProfiler-32.dll",
+        "path64": "D:\\home\\SiteExtensions\\Contrast.NET.Azure.SiteExtension\\ContrastAppService\\ContrastProfiler-64.dll"
+      },
+      "DotnetCore": {
+        "name": "Contrast.NetCore.Azure.SiteExtension",
+        "id": "{8B2CE134-0948-48CA-A4B2-80DDAD9F5791}",
+        "path32": "D:\\home\\SiteExtensions\\Contrast.NetCore.Azure.SiteExtension\\ContrastNetCoreAppService\\runtimes\\win-x86\\native\\ContrastProfiler.dll",
+        "path64": "D:\\home\\SiteExtensions\\Contrast.NetCore.Azure.SiteExtension\\ContrastNetCoreAppService\\runtimes\\win-x64\\native\\ContrastProfiler.dll"
+      }
     }
   },
   "resources": [
