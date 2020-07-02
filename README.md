@@ -19,6 +19,15 @@ As the provided ARM template generates many resources in addition to Contrast sp
 - [Addition of Contrast Extension](/WebSite.json#L135:L144)
 - [Setup of Contrast and App Insight Environment Variables](/WebSite.json#L145:L172)
 
+### Caveats
+- **Important:** The `appSettings` variables should be set **after** the extension is installed. Setting them before will likely cause installation of the extension to fail with a `Conflict`, or `Canceled` state, [as setting the variables causes the service to restart](https://stackoverflow.com/questions/45106303/app-insights-status-monitor-extension-failing-to-deploy-with-arm-template) just as the extension installation starts.
+
+    This template sets them after, by [deploying them as a dependent sub-resource to the App Service](/WebSite.json#L145:L171). 
+
+    Note: settings deployed in this way **will overwrite** any settings provided in the service `siteConfig.appSettings` section.
+- At this time, compatibility with App Insights is untested by Contrast engineering
+- There is no compatibility when the `Snapshot Debugger` or `SQL Commands` Insight Options are enabled
+
 ## Setup
 1. Define 4 secrets in Azure Key Vault: `contrastApiKey`, `contrastAgentServiceKey`, `contrastAgentUsername` and `contrastURL` -- values for these can be found by logging in to Contrast and navigating to Organization Settings -> API
 (contrastURL should be scheme and host/port only, do not include `/Contrast`)
