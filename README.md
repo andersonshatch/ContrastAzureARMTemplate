@@ -13,11 +13,11 @@ Environment variables required by the extensions are also setup with this templa
 ### Contrast specifics in the template
 As the provided ARM template generates many resources in addition to Contrast specifics, if you want to integrate the Contrast specific parts into an existing ARM template, the following links highlight key sections which you'll need to integrate:
 
-- [Declaration of Parameters](/WebSite.json#L38:L81)
+- [Declaration of Parameters](/WebSite.json#L38:L87)
 - [Parameter Reference to Vault Keys](/WebSite.parameters.json#L8:L39)
-- [Declaration of Template Variables](/WebSite.json#L84:L97)
-- [Addition of Contrast Extension](/WebSite.json#L135:L144)
-- [Setup of Contrast and App Insight Environment Variables](/WebSite.json#L145:L172)
+- [Declaration of Template Variables](/WebSite.json#L92:L127)
+- [Addition of Contrast Extension](/WebSite.json#L165:L175)
+- [Setup of Contrast and App Insight Environment Variables](/WebSite.json#L176:L185)
 
 ### Caveats
 - **Important:** The `appSettings` variables should be set **after** the extension is installed. Setting them before will likely cause installation of the extension to fail with a `Conflict`, or `Canceled` state, [as setting the variables causes the service to restart](https://stackoverflow.com/questions/45106303/app-insights-status-monitor-extension-failing-to-deploy-with-arm-template) just as the extension installation starts.
