@@ -1,6 +1,6 @@
-# Contrast Security + Azure App Services ARM template
+# Contrast Security + Azure App Service ARM template
 
-ARM template to create a resource group, app services instance, and add the Contrast .NET or .NET Core extension to it.
+ARM template to create a resource group, app service instance, and add the Contrast .NET or .NET Core extension to it.
 
 Environment variables required by the extensions are also setup with this template.
 
@@ -62,7 +62,7 @@ This will create the required resources. To complete integration, you must publi
 |---|---|---|
 |1|`<Name of Azure Service Connection>`|Name of the Azure Service Connection your pipeline can use|
 |2|`<Your Azure Subscription ID>`|The Azure Subscription ID to use for this deployment|
-|3|`<Your Resource Group Name>`|The Reesource Group to deploy this to|
+|3|`<Your Resource Group Name>`|The Resource Group to deploy this to|
 |4|`<Azure Deployment Location>`|The Azure Region to deploy this to|
 |5|`<Path/to/WebSite.json>`|The path to the ARM template in your repository|
 |6|`<Path/To/WebSite.parameters.json>`|The path to the ARM parameters file in your repository|
@@ -72,5 +72,5 @@ The following are optional, but **recommended** parameters which can be added to
 ||Parameter Name|Value Description
 |---|---|---|
 |1|`-contrastServerEnvironment`|Environment value sent to Contrast when servers are created. Valid values are `DEVELOPMENT`, `QA` or `PRODUCTION`. Default: `QA`|
-|2|`-contrastApplicationGroup`|A comma separated list of application groups the application should associated to|
+|2|`-contrastApplicationGroup`|A comma separated list of application groups the application should onboard to|
 |3|`-contrastServerName`|Name for the server entry in Contrast (default: hostname)|
