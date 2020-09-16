@@ -8,7 +8,7 @@
     },
     "skuName": {
       "type": "string",
-      "defaultValue": "F1",
+      "defaultValue": "D1",
       "allowedValues": [
         "F1",
         "D1",
@@ -76,6 +76,10 @@
     "contrastServerName": {
       "type": "string",
       "defaultValue": ""
+    },
+    "copyCount": {
+      "type": "int",
+      "defaultValue": 5
     }
   },
   "variables": {
@@ -115,7 +119,7 @@
     },
     {
       "apiVersion": "2018-11-01",
-      "name": "[variables('webSiteName')]",
+      "name": "[concat(variables('webSiteName'), '-', copyIndex())]",
       "type": "Microsoft.Web/sites",
       "location": "[resourceGroup().location]",
       "tags": {
@@ -126,17 +130,23 @@
         "[resourceId('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
       ],
       "properties": {
-        "name": "[variables('webSiteName')]",
+        "name": "[concat(variables('webSiteName'), '-', copyIndex())]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
         "siteConfig": {
         }
       },
+      "copy": {
+        "name": "sitecopy",
+        "count": "[parameters('copyCount')]",
+        "mode": "Serial"
+      },
       "resources": [
         {
           "type": "Microsoft.Web/sites/siteextensions",
-          "name": "[concat(variables('webSiteName'), '/', variables('contrastExtensionPackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
+          "name": "[concat(variables('webSiteName'), '-', copyIndex(), '/', variables('contrastExtensionPackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites/', variables('webSiteName'))]"
+            "[resourceId('Microsoft.Web/sites/', concat(variables('webSiteName'), '-', copyIndex()))]",
+            "[resourceId('Microsoft.Web/sites/config', concat(variables('webSiteName'), '-', copyIndex()), 'appsettings')]"
 
           ],
           "apiVersion": "2018-11-01",
@@ -147,12 +157,12 @@
           "name": "appsettings",
           "type": "config",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]",
-            "[concat(variables('contrastExtensionpackage')[parameters('contrastDotNetOrDotnetCore')].name)]"
+            "[resourceId('Microsoft.Web/Sites', concat(variables('webSiteName'), '-', copyIndex()))]"
+            //"[resourceId('Microsoft.Web/sites/siteextensions', concat(variables('webSiteName'), '-', copyIndex()), variables('contrastExtensionpackage')[parameters('contrastDotNetOrDotnetCore')].name)]"
           ],
           "properties": {
-            "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey]",
-            "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(concat('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').ConnectionString]",
+            "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', concat(variables('insightsName'), '-', copyIndex())), '2015-05-01').InstrumentationKey]",
+            "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(concat('Microsoft.Insights/components/', concat(variables('insightsName'), '-', copyIndex())), '2015-05-01').ConnectionString]",
             "ApplicationInsightsAgent_EXTENSION_VERSION": "~2",
             "XDT_MicrosoftApplicationInsights_Mode": "recommended",
             "InstrumentationEngine_EXTENSION_VERSION": "~1",
@@ -240,12 +250,16 @@
       }
     },
     {
-      "name": "[variables('insightsName')]",
+      "name": "[concat(variables('insightsName'), '-', copyIndex())]",
+      "copy": {
+        "name": "insightcopy",
+        "count": "[parameters('copyCount')]"
+      },
       "type": "Microsoft.Insights/components",
       "location": "[resourceGroup().location]",
       "apiVersion": "2014-04-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]"
+        "[resourceId('Microsoft.Web/sites', concat(variables('webSiteName'), '-', copyIndex()))]"
       ],
       "tags": {
         "displayName": "Component Insights"
