@@ -38,6 +38,16 @@ If you are not using Azure Key Vault, rename the minimal `WebSite.prompt-paramet
 
 This will create the required resources. To complete integration, you must publish your .NET or .NET Core application to this app services instance, and your application should then show up in Contrast.
 
+## Deploy with Azure CLI
+Run the following command, substituting `<Your Resource Group Name>` with the name of the resource group to deploy this to:
+`az deployment group create --resource-group <Your Resource Group Name> --template-file WebSite.json --parameters WebSite.parameters.json`
+
+When running interactively, you will be prompted for the value of `contrastDotnetOrDotnetCore`, this can also be passed with an additional switch: `--parameters contrastDotnetOrDotnetCore=<Dotnet|DotnetCore>`
+
+It is optional, but **recommended** to pass a name for this deployment so deployment history will be maintained rather than overwritten, this can be achieved by adding e.g.:
+`--name "website-with-contrast-$(date +%Y-%m-%d--%H-%M-%S)"`
+
+
 ## Deploy from Azure DevOps Pipeline
 1. Add the following task to your Pipeline YAML file:
 
