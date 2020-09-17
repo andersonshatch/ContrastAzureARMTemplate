@@ -141,47 +141,49 @@
         "mode": "Serial"
       },
       "resources": [
-        {
-          "type": "Microsoft.Web/sites/siteextensions",
-          "name": "[concat(variables('webSiteName'), '-', copyIndex(), '/', variables('contrastExtensionPackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites/', concat(variables('webSiteName'), '-', copyIndex()))]",
-            "[resourceId('Microsoft.Web/sites/config', concat(variables('webSiteName'), '-', copyIndex()), 'appsettings')]"
-
-          ],
-          "apiVersion": "2018-11-01",
-          "location": "[resourceGroup().location]"
-        },
-        {
-          "apiVersion": "2016-08-01",
-          "name": "appsettings",
-          "type": "config",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', concat(variables('webSiteName'), '-', copyIndex()))]"
-            //"[resourceId('Microsoft.Web/sites/siteextensions', concat(variables('webSiteName'), '-', copyIndex()), variables('contrastExtensionpackage')[parameters('contrastDotNetOrDotnetCore')].name)]"
-          ],
-          "properties": {
-            "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', concat(variables('insightsName'), '-', copyIndex())), '2015-05-01').InstrumentationKey]",
-            "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(concat('Microsoft.Insights/components/', concat(variables('insightsName'), '-', copyIndex())), '2015-05-01').ConnectionString]",
-            "ApplicationInsightsAgent_EXTENSION_VERSION": "~2",
-            "XDT_MicrosoftApplicationInsights_Mode": "recommended",
-            "InstrumentationEngine_EXTENSION_VERSION": "~1",
-            "DiagnosticServices_EXTENSION_VERSION": "~3",
-            "APPINSIGHTS_PROFILERFEATURE_VERSION": "1.0.0",
-            "XDT_MicrosoftApplicationInsights_BaseExtensions": "~1",
-            "CONTRAST__API__API_KEY": "[parameters('contrastApiKey')]",
-            "CONTRAST__API__SERVICE_KEY": "[parameters('contrastAgentServiceKey')]",
-            "CONTRAST__API__URL": "[parameters('contrastURL')]",
-            "CONTRAST__API__USER_NAME": "[parameters('contrastAgentUsername')]",
-            "CONTRAST__SERVER__ENVIRONMENT": "[parameters('contrastServerEnvironment')]",
-            "CONTRAST__APPLICATION__GROUP": "[parameters('contrastApplicationGroup')]",
-            "CONTRAST__SERVER__NAME": "[parameters('contrastServerName')]",
-            "MicrosoftInstrumentationEngine_RawProfilerHook": "[variables('contrastExtensionPackage')[parameters('contrastDotnetOrDotnetCore')].id]",
-            "MicrosoftInstrumentationEngine_RawProfilerHookPath_32": "[variables('contrastExtensionPackage')[parameters('contrastDotnetOrDotnetCore')].path32]",
-            "MicrosoftInstrumentationEngine_RawProfilerHookPath_64": "[variables('contrastExtensionPackage')[parameters('contrastDotnetOrDotnetCore')].path64]"
-          }
-        }
       ]
+    },
+    {
+        "apiVersion": "2016-08-01",
+        "name": "[concat(variables('webSiteName'), '-', copyIndex(), '/appsettings')]",
+        "type": "Microsoft.Web/sites/config",
+        "dependsOn": ["sitecopy"],
+        "copy": {
+          "count": "[parameters('copyCount')]",
+          "name": "settingcopy"
+        },
+        "properties": {
+          "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', concat(variables('insightsName'), '-', copyIndex())), '2015-05-01').InstrumentationKey]",
+          "APPLICATIONINSIGHTS_CONNECTION_STRING": "[reference(concat('Microsoft.Insights/components/', concat(variables('insightsName'), '-', copyIndex())), '2015-05-01').ConnectionString]",
+          "ApplicationInsightsAgent_EXTENSION_VERSION": "~2",
+          "XDT_MicrosoftApplicationInsights_Mode": "recommended",
+          "InstrumentationEngine_EXTENSION_VERSION": "~1",
+          "DiagnosticServices_EXTENSION_VERSION": "~3",
+          "APPINSIGHTS_PROFILERFEATURE_VERSION": "1.0.0",
+          "XDT_MicrosoftApplicationInsights_BaseExtensions": "~1",
+          "CONTRAST__API__API_KEY": "[parameters('contrastApiKey')]",
+          "CONTRAST__API__SERVICE_KEY": "[parameters('contrastAgentServiceKey')]",
+          "CONTRAST__API__URL": "[parameters('contrastURL')]",
+          "CONTRAST__API__USER_NAME": "[parameters('contrastAgentUsername')]",
+          "CONTRAST__SERVER__ENVIRONMENT": "[parameters('contrastServerEnvironment')]",
+          "CONTRAST__APPLICATION__GROUP": "[parameters('contrastApplicationGroup')]",
+          "CONTRAST__SERVER__NAME": "[parameters('contrastServerName')]",
+          "MicrosoftInstrumentationEngine_RawProfilerHook": "[variables('contrastExtensionPackage')[parameters('contrastDotnetOrDotnetCore')].id]",
+          "MicrosoftInstrumentationEngine_RawProfilerHookPath_32": "[variables('contrastExtensionPackage')[parameters('contrastDotnetOrDotnetCore')].path32]",
+          "MicrosoftInstrumentationEngine_RawProfilerHookPath_64": "[variables('contrastExtensionPackage')[parameters('contrastDotnetOrDotnetCore')].path64]"
+        }
+    },
+    {
+        "type": "Microsoft.Web/sites/siteextensions",
+        "name": "[concat(variables('webSiteName'), '-', copyIndex(), '/', variables('contrastExtensionPackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
+        "copy": {
+          "count": "[parameters('copyCount')]",
+          "name": "extensioncopy",
+          "mode": "Serial"
+        },
+        "dependsOn": ["settingcopy"],
+        "apiVersion": "2018-11-01",
+        "location": "[resourceGroup().location]"
     },
     {
       "apiVersion": "2014-04-01",
