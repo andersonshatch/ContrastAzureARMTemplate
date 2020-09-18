@@ -144,10 +144,22 @@
       ]
     },
     {
+        "type": "Microsoft.Web/sites/siteextensions",
+        "name": "[concat(variables('webSiteName'), '-', copyIndex(), '/', variables('contrastExtensionPackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
+        "copy": {
+          "count": "[parameters('copyCount')]",
+          "name": "extensioncopy",
+          "mode": "Serial"
+        },
+        "dependsOn": ["sitecopy"],
+        "apiVersion": "2018-11-01",
+        "location": "[resourceGroup().location]"
+    },
+    {
         "apiVersion": "2016-08-01",
         "name": "[concat(variables('webSiteName'), '-', copyIndex(), '/appsettings')]",
         "type": "Microsoft.Web/sites/config",
-        "dependsOn": ["sitecopy"],
+        "dependsOn": ["extensioncopy"],
         "copy": {
           "count": "[parameters('copyCount')]",
           "name": "settingcopy"
@@ -172,18 +184,6 @@
           "MicrosoftInstrumentationEngine_RawProfilerHookPath_32": "[variables('contrastExtensionPackage')[parameters('contrastDotnetOrDotnetCore')].path32]",
           "MicrosoftInstrumentationEngine_RawProfilerHookPath_64": "[variables('contrastExtensionPackage')[parameters('contrastDotnetOrDotnetCore')].path64]"
         }
-    },
-    {
-        "type": "Microsoft.Web/sites/siteextensions",
-        "name": "[concat(variables('webSiteName'), '-', copyIndex(), '/', variables('contrastExtensionPackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
-        "copy": {
-          "count": "[parameters('copyCount')]",
-          "name": "extensioncopy",
-          "mode": "Serial"
-        },
-        "dependsOn": ["settingcopy"],
-        "apiVersion": "2018-11-01",
-        "location": "[resourceGroup().location]"
     },
     {
       "apiVersion": "2014-04-01",
