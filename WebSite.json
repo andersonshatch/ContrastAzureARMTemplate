@@ -39,9 +39,7 @@
       "type": "string",
       "allowedValues": [
         "Dotnet",
-        ".NET Framework",
-        "DotnetCore",
-        ".NET Core"
+        "DotnetCore"
       ],
       "metadata": {
         "description": "Select between the .NET Framework and the .NET Core Contrast Extension, based on which language the site deployed to this service will use."
@@ -78,15 +76,39 @@
     "contrastServerName": {
       "type": "string",
       "defaultValue": ""
+    },
+    "includeContrast": {
+      "type": "bool",
+      "defaultValue": true
     }
   },
   "variables": {
     "webSiteName": "[concat('webSite', uniqueString(resourceGroup().id))]",
+    "insightsName":  "[concat('webSite', uniqueString(resourceGroup().id), 'Insights')]",
     "contrastExtensionPackage": {
-      "Dotnet": "Contrast.NET.Azure.SiteExtension",
-      ".NET Framework": "Contrast.NET.Azure.SiteExtension",
-      "DotnetCore":  "Contrast.NetCore.Azure.SiteExtension",
-      ".NET Core": "Contrast.NetCore.Azure.SiteExtension"
+      "Dotnet": {
+        "name": "Contrast.NET.Azure.SiteExtension"
+      },
+      "DotnetCore": {
+        "name": "Contrast.NetCore.Azure.SiteExtension"
+      }
+    },
+    "appInsightSettings": {
+      "ApplicationInsightsAgent_EXTENSION_VERSION": "~2",
+      "XDT_MicrosoftApplicationInsights_Mode": "recommended",
+      "InstrumentationEngine_EXTENSION_VERSION": "~1",
+      "DiagnosticServices_EXTENSION_VERSION": "~3",
+      "APPINSIGHTS_PROFILERFEATURE_VERSION": "1.0.0",
+      "XDT_MicrosoftApplicationInsights_BaseExtensions": "~1"
+    },
+    "contrastAppSettings": {
+      "CONTRAST__API__API_KEY": "[parameters('contrastApiKey')]",
+      "CONTRAST__API__SERVICE_KEY": "[parameters('contrastAgentServiceKey')]",
+      "CONTRAST__API__URL": "[parameters('contrastURL')]",
+      "CONTRAST__API__USER_NAME": "[parameters('contrastAgentUsername')]",
+      "CONTRAST__SERVER__ENVIRONMENT": "[parameters('contrastServerEnvironment')]",
+      "CONTRAST__APPLICATION__GROUP": "[parameters('contrastApplicationGroup')]",
+      "CONTRAST__SERVER__NAME": "[parameters('contrastServerName')]"
     }
   },
   "resources": [
@@ -121,48 +143,29 @@
       "properties": {
         "name": "[variables('webSiteName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-        "siteConfig": {
-          "appSettings": [
-            {
-              "name": "CONTRAST__API__API_KEY",
-              "value": "[parameters('contrastApiKey')]"
-            },
-            {
-              "name": "CONTRAST__API__SERVICE_KEY",
-              "value": "[parameters('contrastAgentServiceKey')]"
-            },
-            {
-              "name": "CONTRAST__API__URL",
-              "value": "[parameters('contrastURL')]"
-            },
-            {
-              "name": "CONTRAST__API__USER_NAME",
-              "value": "[parameters('contrastAgentUsername')]"
-            },
-            {
-              "name": "CONTRAST__SERVER__ENVIRONMENT",
-              "value": "[parameters('contrastServerEnvironment')]"
-            },
-            {
-              "name": "CONTRAST__APPLICATION__GROUP",
-              "value": "[parameters('contrastApplicationGroup')]"
-            },
-            {
-              "name": "CONTRAST__SERVER__NAME",
-              "value": "[parameters('contrastServerName')]"
-            }
-          ]
-        }
+        "siteConfig": {}
       },
       "resources": [
         {
           "type": "Microsoft.Web/sites/siteextensions",
-          "name": "[concat(variables('webSiteName'), '/', variables('contrastExtensionPackage')[parameters('contrastDotNetOrDotnetCore')])]",
+          "condition": "[parameters('includeContrast')]",
+          "name": "[concat(variables('webSiteName'), '/', variables('contrastExtensionPackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
           "dependsOn": [
             "[resourceId('Microsoft.Web/sites/', variables('webSiteName'))]"
           ],
           "apiVersion": "2018-11-01",
           "location": "[resourceGroup().location]"
+        },
+        {
+          "apiVersion": "2016-08-01",
+          "name": "appsettings",
+          "type": "config",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('webSiteName'))]",
+            "[concat(variables('contrastExtensionpackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
+            "[concat('Microsoft.Insights/components/', variables('insightsName'))]"
+          ],
+          "properties": "[union(if(parameters('includeContrast'), variables('contrastAppSettings'), json('{}')), variables('appInsightSettings'),json(concat('{\"APPINSIGHTS_INSTRUMENTATIONKEY\": \"', reference(concat('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey, '\"}','{\"APPINSIGHTS_CONNECTION_STRING\": \"', reference(concat('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').ConnectionString, '\"}')))]"
         }
       ]
     },
@@ -230,6 +233,21 @@
         "enabled": false,
         "name": "[concat(parameters('hostingPlanName'), '-', resourceGroup().name)]",
         "targetResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+      }
+    },
+    {
+      "name": "[variables('insightsName')]",
+      "type": "Microsoft.Insights/components",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]"
+      ],
+      "tags": {
+        "displayName": "Component Insights"
+      },
+      "properties": {
+        "applicationId": "[resourceId('Microsoft.Web/sites', variables('webSiteName'))]"
       }
     }
   ]
