@@ -4,6 +4,12 @@ ARM template to create a resource group, app service instance, and add the Contr
 
 Environment variables required by the extensions are also setup with this template.
 
+## Alternative approaches
+There are some additional branches which allow conditional inclusion of the extension, and even conditional inclusion of the extension and its configuration.
+See:
+- [`optional-extension`](https://github.com/andersonshatch/ContrastAzureARMTemplate/tree/optional-extension)
+- [`optional-extension-optional-config`](https://github.com/andersonshatch/ContrastAzureARMTemplate/tree/optional-extension-optional-config)
+
 ## Components
 1. The ARM template itself: [`WebSite.json`](WebSite.json)
 1. The parameters to the template, using Azure Vault references: [`WebSite.parameters.json`](WebSite.parameters.json)
