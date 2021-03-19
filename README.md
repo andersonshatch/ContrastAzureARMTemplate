@@ -1,8 +1,10 @@
 # Contrast Security + Azure App Service ARM template
 
-ARM template to create a resource group, app service instance, and add the Contrast .NET or .NET Core extension to it.
+ARM template to create a resource group, app service instance, and conditionally add the Contrast .NET or .NET Core extension to it.
 
-Environment variables required by the extensions are also setup with this template.
+Environment variables required by the extensions are also setup with this template when the extension is added.
+
+Extension installation is controlled by the template parameter `includeContrast` which defaults to true.
 
 ## Components
 1. The ARM template itself: [`WebSite.json`](WebSite.json)
@@ -13,11 +15,11 @@ Environment variables required by the extensions are also setup with this templa
 ### Contrast specifics in the template
 As the provided ARM template generates many resources in addition to Contrast specifics, if you want to integrate the Contrast specific parts into an existing ARM template, the following links highlight key sections which you'll need to integrate:
 
-- [Declaration of Parameters](/WebSite.json#L38:L81)
+- [Declaration of Parameters](/WebSite.json#L38:L83)
 - [Parameter Reference to Vault Keys](/WebSite.parameters.json#L8:L39)
-- [Declaration of Template Variables](/WebSite.json#L85:L90)
-- [Setup of Contrast Environment Variables](/WebSite.json#L125:L153)
-- [Addition of Contrast Extension](/WebSite.json#L158:L166)
+- [Declaration of Template Variables](/WebSite.json#L88:L112)
+- [Setup of Contrast and App Insights Environment Variables](/WebSite.json#L168)
+- [Addition of Contrast Extension](/WebSite.json#L149:L158)
 
 ## Setup
 1. Define 4 secrets in Azure Key Vault: `contrastApiKey`, `contrastAgentServiceKey`, `contrastAgentUsername` and `contrastURL` -- values for these can be found by logging in to Contrast and navigating to Organization Settings -> API
