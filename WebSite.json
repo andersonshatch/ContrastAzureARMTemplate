@@ -92,23 +92,6 @@
       "DotnetCore": {
         "name": "Contrast.NetCore.Azure.SiteExtension"
       }
-    },
-    "appInsightSettings": {
-      "ApplicationInsightsAgent_EXTENSION_VERSION": "~2",
-      "XDT_MicrosoftApplicationInsights_Mode": "recommended",
-      "InstrumentationEngine_EXTENSION_VERSION": "~1",
-      "DiagnosticServices_EXTENSION_VERSION": "~3",
-      "APPINSIGHTS_PROFILERFEATURE_VERSION": "1.0.0",
-      "XDT_MicrosoftApplicationInsights_BaseExtensions": "~1"
-    },
-    "contrastAppSettings": {
-      "CONTRAST__API__API_KEY": "[parameters('contrastApiKey')]",
-      "CONTRAST__API__SERVICE_KEY": "[parameters('contrastAgentServiceKey')]",
-      "CONTRAST__API__URL": "[parameters('contrastURL')]",
-      "CONTRAST__API__USER_NAME": "[parameters('contrastAgentUsername')]",
-      "CONTRAST__SERVER__ENVIRONMENT": "[parameters('contrastServerEnvironment')]",
-      "CONTRAST__APPLICATION__GROUP": "[parameters('contrastApplicationGroup')]",
-      "CONTRAST__SERVER__NAME": "[parameters('contrastServerName')]"
     }
   },
   "resources": [
@@ -165,7 +148,23 @@
             "[concat(variables('contrastExtensionpackage')[parameters('contrastDotNetOrDotnetCore')].name)]",
             "[concat('Microsoft.Insights/components/', variables('insightsName'))]"
           ],
-          "properties": "[union(if(parameters('includeContrast'), variables('contrastAppSettings'), json('{}')), variables('appInsightSettings'),json(concat('{\"APPINSIGHTS_INSTRUMENTATIONKEY\": \"', reference(concat('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey, '\"}','{\"APPINSIGHTS_CONNECTION_STRING\": \"', reference(concat('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').ConnectionString, '\"}')))]"
+          "properties": {
+            "CONTRAST__API__API_KEY": "[parameters('contrastApiKey')]",
+            "CONTRAST__API__SERVICE_KEY": "[parameters('contrastAgentServiceKey')]",
+            "CONTRAST__API__URL": "[parameters('contrastURL')]",
+            "CONTRAST__API__USER_NAME": "[parameters('contrastAgentUsername')]",
+            "CONTRAST__SERVER__ENVIRONMENT": "[parameters('contrastServerEnvironment')]",
+            "CONTRAST__APPLICATION__GROUP": "[parameters('contrastApplicationGroup')]",
+            "CONTRAST__SERVER__NAME": "[parameters('contrastServerName')]",
+            "ApplicationInsightsAgent_EXTENSION_VERSION": "~2",
+            "XDT_MicrosoftApplicationInsights_Mode": "recommended",
+            "InstrumentationEngine_EXTENSION_VERSION": "~1",
+            "DiagnosticServices_EXTENSION_VERSION": "~3",
+            "APPINSIGHTS_PROFILERFEATURE_VERSION": "1.0.0",
+            "XDT_MicrosoftApplicationInsights_BaseExtensions": "~1",
+            "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').InstrumentationKey]",
+            "APPINSIGHTS_CONNECTION_STRING": "[reference(concat('Microsoft.Insights/components/', variables('insightsName')), '2015-05-01').ConnectionString]"
+          }
         }
       ]
     },
